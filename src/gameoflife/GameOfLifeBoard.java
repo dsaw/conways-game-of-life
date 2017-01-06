@@ -44,13 +44,16 @@ class GridSurface extends JPanel
 
 public class GameOfLifeBoard extends JFrame {
 
+    public static final double DELAY =1.5;
+    
+    
     GameOfLifeBoard()
     {
         initUI();
     }
     
     
-    public void initUI()
+    private void initUI()
     {
         add( new GridSurface());
         
