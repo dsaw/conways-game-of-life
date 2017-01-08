@@ -15,8 +15,8 @@ import java.util.NoSuchElementException;
  */
 public class ConwaysGameOfLife {
 
-    public static final int WIDTH = 200;
-    public static final int HEIGHT = 200;
+    public static final int WIDTH = 20;
+    public static final int HEIGHT = 20;
     
     //rules of cellula automata
     public static final int birth_cell = 3;

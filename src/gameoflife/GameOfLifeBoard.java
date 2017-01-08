@@ -5,6 +5,7 @@
  */
 package gameoflife;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,28 +16,6 @@ import javax.swing.JPanel;
  *
  * @author Devesh
  */
-class GridSurface extends JPanel
-{
-    GridSurface()
-    {
-        
-    }
-    
-    private void doDrawing(Graphics g)
-    {
-         Graphics2D g2d = (Graphics2D)g;
-         g2d.drawOval(20, 100, 40, 50);
-    
-    }
-    
-    @Override
-    public void paintComponent(Graphics g)
-    {
-        super.paintComponent(g);
-        doDrawing(g);
-        
-       }
-}
 
 
 
@@ -45,7 +24,7 @@ class GridSurface extends JPanel
 public class GameOfLifeBoard extends JFrame {
 
     public static final double DELAY =1.5;
-    
+    private static GridSurface gsurface;
     
     GameOfLifeBoard()
     {
@@ -55,10 +34,13 @@ public class GameOfLifeBoard extends JFrame {
     
     private void initUI()
     {
-        add( new GridSurface());
-        
-        setSize(500,500);
-        setLocationRelativeTo(null);
+         
+        gsurface =new GridSurface();
+        add(gsurface);
+         setSize(new Dimension(ConwaysGameOfLife.WIDTH*GridSurface.CELL_SIZE + 2, ConwaysGameOfLife.HEIGHT*GridSurface.CELL_SIZE+200));
+       
+        setTitle("Conway's Game Of Life");
+       setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     } 
     
