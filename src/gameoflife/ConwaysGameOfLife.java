@@ -197,6 +197,8 @@ public class ConwaysGameOfLife {
              {
                  if(StdRandom.bernoulli(alive_probability))
                      alive(i,j);
+                 else
+                     dead(i,j);
              }
          }
      }

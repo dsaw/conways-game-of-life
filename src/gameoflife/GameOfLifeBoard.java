@@ -23,7 +23,6 @@ import javax.swing.JPanel;
 
 public class GameOfLifeBoard extends JFrame {
 
-    public static final double DELAY =1.5;
     private static GridSurface gsurface;
     
     GameOfLifeBoard()
@@ -35,13 +34,13 @@ public class GameOfLifeBoard extends JFrame {
     private void initUI()
     {
          
-        gsurface =new GridSurface();
-        add(gsurface);
-         setSize(new Dimension(ConwaysGameOfLife.WIDTH*GridSurface.CELL_SIZE + 2, ConwaysGameOfLife.HEIGHT*GridSurface.CELL_SIZE+200));
+       gsurface = new GridSurface();
+       add(gsurface);
+       setSize(new Dimension(ConwaysGameOfLife.WIDTH*GridSurface.CELL_SIZE + 18, ConwaysGameOfLife.HEIGHT*GridSurface.CELL_SIZE+200));
        
-        setTitle("Conway's Game Of Life");
+       setTitle("Conway's Game Of Life");
        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     } 
     
     /**

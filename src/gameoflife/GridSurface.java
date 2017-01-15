@@ -23,23 +23,35 @@
  */
 package gameoflife;
 
+import static com.sun.java.accessibility.util.SwingEventMonitor.addChangeListener;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.Timer;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author Devesh
  */
-public class GridSurface extends JPanel implements MouseListener {
+public class GridSurface extends JPanel implements MouseListener,ActionListener,ChangeListener {
 
-    
+    private Timer gameTimer;
+    private boolean frozen = true;
     private ConwaysGameOfLife conwaysBoard;
-    public static final int CELL_SIZE = 20;
+    public static int CELL_SIZE = 20;
+    public static int DELAY = 300;
+    
+    static final int DELAY_MIN = 50;
+    static final int DELAY_MAX = 2000;
     // 
     // each cell is 5x5
     /**
@@ -53,7 +65,13 @@ public class GridSurface extends JPanel implements MouseListener {
          
          addMouseListener(this);
          
+                 
          conwaysBoard = new ConwaysGameOfLife();
+         delaySlider = new JSlider(JSlider.HORIZONTAL,DELAY_MIN,DELAY_MAX, DELAY);
+         delaySlider.addChangeListener(this);
+         delaySlider.setMajorTickSpacing(100);
+         delaySlider.setPaintTicks(true);
+         
     }
 
     // converts the coordinates to respective cell location
@@ -89,8 +107,8 @@ public class GridSurface extends JPanel implements MouseListener {
         Graphics2D g2d = (Graphics2D)g;
         g2d.setColor(Color.WHITE);
         // if alive, paint it
-        for(int x=0 ; x< ConwaysGameOfLife.WIDTH; ++x)
-            for( int y=0; y< ConwaysGameOfLife.HEIGHT; ++y)
+        for(int x=0 ; x<ConwaysGameOfLife.WIDTH; ++x)
+            for( int y=0; y<ConwaysGameOfLife.HEIGHT; ++y)
                if(conwaysBoard.getStateOfCell(x, y))
                     g2d.fillRect(x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE);
     }
@@ -133,18 +151,139 @@ public class GridSurface extends JPanel implements MouseListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        generationLabel = new javax.swing.JLabel();
+        Randomized = new javax.swing.JButton();
+        delaySlider = new javax.swing.JSlider();
+        Debug = new javax.swing.JLabel();
+
+        jTextField1.setText("jTextField1");
+
+        jButton1.setText("START");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("STOP");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        generationLabel.setText("Generation: ");
+
+        Randomized.setText("Randomize");
+        Randomized.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RandomizedActionPerformed(evt);
+            }
+        });
+
+        Debug.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Randomized)
+                    .addComponent(jButton1))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(jButton2)
+                        .addGap(41, 41, 41)
+                        .addComponent(generationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(delaySlider, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(39, 39, 39)
+                        .addComponent(Debug, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(237, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(Randomized, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(delaySlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Debug, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(generationLabel))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // stop simulation
+        if(frozen)
+            return;
+        gameTimer.stop();
+        frozen = true;
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Start game simulation
+        if(!frozen)
+            return;
+        if (gameTimer == null)
+        {
+            gameTimer = new Timer(DELAY,this);
+            gameTimer.start();
+            conwaysBoard.setGeneration(0);
+        }
+        else
+            gameTimer.restart();
+        
+        frozen = false;
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void RandomizedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RandomizedActionPerformed
+        // TODO add your handling code here:
+        conwaysBoard.randomlyInitGrid(0.5);
+        conwaysBoard.setGeneration(0);
+        repaint();
+    }//GEN-LAST:event_RandomizedActionPerformed
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+      
+        // next generation of grid is simulated
+        conwaysBoard.nextGeneration();
+        //update label
+        repaint();
+        generationLabel.setText("Generation: "+ conwaysBoard.getGeneration());
+        frozen = false;
+    }
+    
+    @Override
+    public void stateChanged(ChangeEvent e) {
+         JSlider source = (JSlider)e.getSource();
+         Debug.setText(String.valueOf(DELAY));
+         // slider value is set and timer is changed;
+         if (!source.getValueIsAdjusting())
+         {
+             DELAY = (int)source.getValue();
+             
+             gameTimer.setDelay(DELAY);
+         }
+        
+    }
+    
     @Override
     public void mousePressed(MouseEvent e) {
         }
@@ -163,5 +302,14 @@ public class GridSurface extends JPanel implements MouseListener {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Debug;
+    private javax.swing.JButton Randomized;
+    private javax.swing.JSlider delaySlider;
+    private javax.swing.JLabel generationLabel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    
 }
